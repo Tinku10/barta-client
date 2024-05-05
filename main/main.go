@@ -1,9 +1,9 @@
 package main
 
 import (
-  "fmt"
-  "flag"
-  "barta-client/barta"
+	"barta-client/barta"
+	"flag"
+	"log"
 )
 
 func main() {
@@ -11,13 +11,18 @@ func main() {
   flag.Parse()
 
   topic := barta.NewTopic("topic1", *clusterAddr)
+  // producer := barta.NewProducer("producer1")
+  consumer := barta.NewConsumer("consumer1")
+  consumer.SubscribeToTopic(topic)
 
-  fmt.Println("-----------------------")
-  // topic.PutMessage("Hello")
-  // topic.PutMessage("Hello2")
-  // topic.PutMessage("Hello3")
-  fmt.Println(topic.GetMessage())
-  // fmt.Println(topic.GetMessage())
-  // fmt.Println(topic.GetMessage())
-  fmt.Println("-----------------------")
+  // producer.PutMessage(topic, "hello-----------")
+  // producer.PutMessage(topic, "hello2-----------")
+  messages, err := consumer.GetMessages()
+  if err != nil {
+    log.Println(err)
+  }
+
+  for _, m := range messages {
+    log.Println(m)
+  }
 }
